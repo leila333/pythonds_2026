@@ -3,6 +3,12 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Ne pas envoyer les données 
+data/
+*.csv
+*.xlsx
+
+
 # C extensions
 *.so
 
