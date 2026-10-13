@@ -4,6 +4,8 @@ Ce projet de récupération et de visualisation de données, s'inscrit dans le c
 
 ### Données
 Les données utilisées proviennent de l'European Social Service (ESS).
+Les données sont librement accessibles et peuvent être téléchargées après connexion sur le portail officiel de l’European Social Survey (ESS) : 
+https://ess.sikt.no/en/series/321b06ad-1b98-4b7d-93ad-ca8a24e8788a
 
 Référence données :
 European Social Survey European Research Infrastructure (ESS ERIC). (2026). ESS11 integrated file, edition 4.2 [Data set]. 
