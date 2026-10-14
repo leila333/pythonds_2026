@@ -37,23 +37,60 @@ def recuperer_donnees(annee):
 
 ############# Préparations des données #############
 
-def select_colonne(df, liste_colonnes):
-    # liste_colonnes sera de la forme ["nom_colonne1_a_garder", "nom_colonne2_a_garder"]
-    return df
+def select_colonne(df: pd.DataFrame, liste_colonnes: list[str]) -> pd.DataFrame:
+    """
+    Sélectionne un sous-ensemble de colonnes dans un DataFrame pandas.
+
+    Paramètre :
+    ----------
+    df : pd.DataFrame (le DataFrame source)
+    liste_colonnes : list of str (liste des noms des colonnes à conserver)
+
+    Retourne :
+    -------
+    pd.DataFrame (nouveau DataFrame ne contenant que les colonnes sélectionnées)
+    """
+    return df[liste_colonnes].copy()
 
 
-def suppr_colonne(df, liste_colonnes):
-    # liste_colonnes sera de la forme ["nom_colonne1_a_supprimer", "nom_colonne2_a_supprimer"]
-    return df
+
+def suppr_colonne(df: pd.DataFrame, liste_colonnes: list[str]) -> pd.DataFrame:
+    """
+    Supprime une liste de colonnes d'un DataFrame pandas.
+
+    Paramètre :
+    ----------
+    df : pd.DataFrame (le DataFrame source)
+    liste_colonnes : list of str (liste des noms des colonnes à supprimer)
+
+    Retourne :
+    -------
+    pd.DataFrame (nouveau DataFrame sans les colonnes spécifiées)
+    """
+    return df.drop(columns=liste_colonnes)
 
 
-def renommer_colonne(df, liste_ancien_nom, liste_nouveau_nom):
-    # si liste_old_nom = ["polyintr", "idno"]
-    # et liste_new_nom = ["interet_politique", "identifiant"]
-    # alors cette fonction renvoie un dataframe où la colonne 
-    # "polyintr" a été renommé "interet_politique" etc.
-    return df
+def renommer_colonne(df: pd.DataFrame, liste_ancien_nom: list[str], liste_nouveau_nom: list[str]) -> pd.DataFrame:
+    """
+    Renomme des colonnes d'un DataFrame à partir de deux listes ordonnées.
 
+    Paramètre :
+    ----------
+    df : pd.DataFrame (le DataFrame source)
+    liste_ancien_nom : list of str (liste des anciens noms de colonnes)
+    liste_nouveau_nom : list of str (liste des nouveaux noms correspondants)
+
+    Retourne :
+    -------
+    pd.DataFrame (nouveau DataFrame avec les colonnes renommées)
+    """
+    if len(liste_ancien_nom) != len(liste_nouveau_nom):
+        raise ValueError(
+            "Les deux listes doivent avoir exactement la même longueur."
+        )
+
+    mapping = dict(zip(liste_ancien_nom, liste_nouveau_nom))
+    return df.rename(columns=mapping)
 
 def normaliser_df(df):
     # Faut juste attendre qu'on ait nos variables pour pouvoir écrire cette fonction
