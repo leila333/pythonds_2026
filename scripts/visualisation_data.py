@@ -12,9 +12,9 @@ from preparation_data import recuperer_donnees, dico_doi, select_colonne, suppr_
 
 ############# Préparation des données #############
 
-df_ess_2023 = recuperer_donnees(2023)
-print(df_ess_2023.shape)
-print(df_ess_2023.head())
+df_ess_2020 = recuperer_donnees(2020)
+print(df_ess_2020.shape)
+print(df_ess_2020.head())
 
 #Liste des colonnes potentiellement pertinentes pour l'étude sur les théories du complot (ESS Round 10)
 # Source des variables : https://ess.sikt.no/en/datafile/242aaa39-3bbb-40f5-98bf-bfb1ce53d8ef
@@ -70,6 +70,36 @@ colonnes_a_garder = [
     "agea",       # Âge exact du répondant
     "yrbrn",      # Année de naissance
 ]
+
+# Noms explicites en français correspondants exactement à colonnes_a_garder
+nouveaux_noms = [
+    # 1) identifiants & poids
+    "id", "pays", "poids_analyse", "poids_design", "poids_poststrat",
+    # 2) Ccoyances complotistes & science
+    "complot_groupes_secrets", "complot_science_politique", "dissimulation_covid", 
+    "mesures_sanitaires_controle", "mesures_sanitaires_equilibre", "confiance_science", 
+    "refus_vaccin", "statut_vaccine",
+    # 3) politique & institutions
+    "axe_gauche_droite", "interet_politique", "a_vote", "proche_parti", "degre_proximite_parti",
+    "confiance_parlement", "confiance_politiques", "confiance_partis", "confiance_justice", 
+    "confiance_police", "efficacite_politique_citoyen", "prise_en_compte_citoyen",
+    # 4) éducation & socio-éco
+    "niveau_etudes_isced", "annees_etudes", "decile_revenu", "sentiment_revenu", 
+    "activite_principale", "chomage", "milieu_residence",
+    # 5) religion & spiritualité
+    "appartenance_religieuse", "degre_religiosite", "frequence_culte", "frequence_priere",
+    # 6) démographie
+    "genre", "age", "annee_naissance"
+]
+
+# Filtrage puis renommage
+df_filtre = select_colonne(df_ess_2020, colonnes_a_garder)
+df_clean = renommer_colonne(df_filtre, colonnes_a_garder, nouveaux_noms)
+
+print("Dimensions après filtrage :", df_clean.shape)
+print(df_clean.head())
+
+
 
 # Utiliser les fonctions de preparation_data.py pour renommer, 
 # garder les colonnes utiles, supprimer les colonnes inutiles
