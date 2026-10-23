@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import os
+import matplotlib.pyplot as plt
 from preparation_data import recuperer_donnees, dico_doi, select_colonne, suppr_colonne, renommer_colonne
 
 
@@ -101,8 +103,30 @@ print(df_clean.head())
 
 
 
-# Utiliser les fonctions de preparation_data.py pour renommer, 
-# garder les colonnes utiles, supprimer les colonnes inutiles
+
+
+############# Création de variables #############
+
+
+
+
+# contient toutes les variables finaux qu'on gardera après avoir vu le fichier stats_desc 
+variable_finaux = [] 
+
+# Parmi les variables ci-dessus, lesquels sont les variables "expliqué" ? Les mettre ici
+variable_expliqué = ["confiance_science"]
+# 
+variables_explicatives = [""]
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -126,13 +150,13 @@ manquantes = pd.DataFrame({
 manquantes = manquantes.sort_values("pct_manquantes", ascending=False).reset_index(drop=True)
 
 # Affichage en tableau (console)
-print(manquantes.to_string(index=False))
+#print(manquantes.to_string(index=False))
 
 # Dans un notebook (Jupyter, VSCode)
 manquantes.style.background_gradient(subset=["pct_manquantes"], cmap="Reds").format({"pct_manquantes": "{:.2f} %"})
 
-manquantes.to_csv("valeurs_manquantes.csv", index=False)
-manquantes.to_latex("valeurs_manquantes.tex", index=False, float_format="%.2f")
+#manquantes.to_csv("valeurs_manquantes.csv", index=False)
+#manquantes.to_latex("valeurs_manquantes.tex", index=False, float_format="%.2f")
 
 #on regarde les valeurs manquantes par pays : 
 manq_pays = (df_clean.drop(columns=["id"]).isna()
@@ -141,11 +165,11 @@ manq_pays = (df_clean.drop(columns=["id"]).isna()
 # Variables clés
 cles = ["complot_groupes_secrets", "complot_science_politique", "dissimulation_covid",
         "confiance_science", "statut_vaccine", "decile_revenu"]
-print(manq_pays[cles].T.to_string())
+#print(manq_pays[cles].T.to_string())
 
-for v in cles:
-    pays_absents = manq_pays.index[manq_pays[v] > 90].tolist()
-    print(v, "→", pays_absents)
+#for v in cles:
+    #pays_absents = manq_pays.index[manq_pays[v] > 90].tolist()
+    #print(v, "→", pays_absents)
 
 
 # regarder la moyenne, ecart-type des différents colonnes etc
@@ -154,17 +178,14 @@ for v in cles:
 # Variables : confiance_science (pays où elle est posée), axe_gauche_droite,
 # confiance_politiques, degre_religiosite, interet_politique.
 
-import os
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+
 
 ############# Paramètres #############
 POIDS = "poids_analyse"   # anweight : proportionnel à pspwght au sein d'un pays, adapté aux comparaisons entre pays
 SEUIL_MANQ = 0.5          # un pays est exclu pour confiance_science si > 50 % de manquantes
 DOSSIER_FIG = "figures"
-os.makedirs(DOSSIER_FIG, exist_ok=True)
-print("Figures enregistrées dans :", os.path.abspath(DOSSIER_FIG))
+#os.makedirs(DOSSIER_FIG, exist_ok=True)
+#print("Figures enregistrées dans :", os.path.abspath(DOSSIER_FIG))
 
 variables = {
     "confiance_science":    "Confiance dans la science (0-10)",
@@ -189,8 +210,8 @@ df["interet_politique"] = 5 - df["interet_politique"]
 # Pays où confiance_science est (quasi) complète
 part_manq = df.groupby("pays")["confiance_science"].apply(lambda s: s.isna().mean())
 pays_science = part_manq[part_manq < SEUIL_MANQ].index
-print("Pays retenus pour confiance_science :", list(pays_science))
-print("Pays exclus :", list(part_manq[part_manq >= SEUIL_MANQ].index))
+#print("Pays retenus pour confiance_science :", list(pays_science))
+#print("Pays exclus :", list(part_manq[part_manq >= SEUIL_MANQ].index))
 
 
 def donnees(var):
@@ -235,100 +256,98 @@ def stats(d, var):
 
 
 ############# 1) Tableau global #############
-glob = pd.DataFrame({v: stats(donnees(v), v) for v in variables}).T.round(2)
-print("\n=== Statistiques descriptives globales (pondérées) ===")
-print(glob.to_string())
-glob.to_csv("stats_globales.csv")
+#glob = pd.DataFrame({v: stats(donnees(v), v) for v in variables}).T.round(2)
+#print("\n=== Statistiques descriptives globales (pondérées) ===")
+#print(glob.to_string())
+#glob.to_csv("stats_globales.csv")
 
 ############# 2) Tableaux par pays #############
-par_pays = {
-    v: pd.DataFrame({p: stats(g, v) for p, g in donnees(v).groupby("pays")}).T
-    for v in variables
-}
-pd.concat(par_pays, names=["variable", "pays"]).round(2).to_csv("stats_par_pays.csv")
+#par_pays = {
+    #v: pd.DataFrame({p: stats(g, v) for p, g in donnees(v).groupby("pays")}).T
+    #for v in variables
+#}
+#pd.concat(par_pays, names=["variable", "pays"]).round(2).to_csv("stats_par_pays.csv")
 
-for v, lab in variables.items():
-    print(f"\n=== {lab} : par pays ===")
-    print(par_pays[v].round(2).to_string())
+#for v, lab in variables.items():
+    #print(f"\n=== {lab} : par pays ===")
+    #print(par_pays[v].round(2).to_string())
 
 # Moyennes pondérées : pays x variables
-moy_pays = pd.DataFrame({v: par_pays[v]["moyenne"] for v in variables}).round(2)
-print("\n=== Moyennes pondérées par pays ===")
-print(moy_pays.to_string())
+#moy_pays = pd.DataFrame({v: par_pays[v]["moyenne"] for v in variables}).round(2)
+#print("\n=== Moyennes pondérées par pays ===")
+#print(moy_pays.to_string())
 
 ############# 3) Graphiques #############
 # 3a) Distribution globale (histogrammes pondérés)
-fig, axes = plt.subplots(2, 3, figsize=(15, 8))
-axes = axes.ravel()
-for ax, (v, lab) in zip(axes, variables.items()):
-    d = donnees(v).dropna(subset=[v, POIDS])
-    bins = np.arange(d[v].min() - 0.5, d[v].max() + 1.5, 1)
-    ax.hist(d[v], bins=bins, weights=d[POIDS], edgecolor="white")
-    ax.set_title(lab, fontsize=10)
-    ax.set_ylabel("Effectif pondéré")
-axes[-1].axis("off")
-fig.suptitle("Distribution des variables principales (ESS 10)", fontsize=13)
-fig.tight_layout()
-fig.savefig(f"{DOSSIER_FIG}/distributions.png", dpi=150)
-plt.show()
+#fig, axes = plt.subplots(2, 3, figsize=(15, 8))
+#axes = axes.ravel()
+#for ax, (v, lab) in zip(axes, variables.items()):
+    #d = donnees(v).dropna(subset=[v, POIDS])
+    #bins = np.arange(d[v].min() - 0.5, d[v].max() + 1.5, 1)
+    #ax.hist(d[v], bins=bins, weights=d[POIDS], edgecolor="white")
+    #ax.set_title(lab, fontsize=10)
+    #ax.set_ylabel("Effectif pondéré")
+#axes[-1].axis("off")
+#fig.suptitle("Distribution des variables principales (ESS 10)", fontsize=13)
+#fig.tight_layout()
+#fig.savefig(f"{DOSSIER_FIG}/distributions.png", dpi=150)
+#plt.show()
 
 # 3b) Boîtes à moustaches par pays (pays triés par moyenne pondérée)
-fig, axes = plt.subplots(2, 3, figsize=(20, 10))
-axes = axes.ravel()
-for ax, (v, lab) in zip(axes, variables.items()):
-    d = donnees(v).dropna(subset=[v])
-    ordre = par_pays[v]["moyenne"].sort_values().index
-    ax.boxplot([d.loc[d["pays"] == p, v] for p in ordre], showfliers=False)
-    ax.set_xticks(range(1, len(ordre) + 1))
-    ax.set_xticklabels(ordre, rotation=90, fontsize=8)
-    ax.set_title(lab, fontsize=10)
-axes[-1].axis("off")
-fig.suptitle("Distribution par pays (non pondérée, triée par moyenne pondérée)", fontsize=13)
-fig.tight_layout()
-fig.savefig(f"{DOSSIER_FIG}/boxplots_par_pays.png", dpi=150)
-plt.show()
+#fig, axes = plt.subplots(2, 3, figsize=(20, 10))
+#axes = axes.ravel()
+#for ax, (v, lab) in zip(axes, variables.items()):
+    #d = donnees(v).dropna(subset=[v])
+    #ordre = par_pays[v]["moyenne"].sort_values().index
+    #ax.boxplot([d.loc[d["pays"] == p, v] for p in ordre], showfliers=False)
+    #ax.set_xticks(range(1, len(ordre) + 1))
+    #ax.set_xticklabels(ordre, rotation=90, fontsize=8)
+    #ax.set_title(lab, fontsize=10)
+#axes[-1].axis("off")
+#fig.suptitle("Distribution par pays (non pondérée, triée par moyenne pondérée)", fontsize=13)
+#fig.tight_layout()
+#fig.savefig(f"{DOSSIER_FIG}/boxplots_par_pays.png", dpi=150)
+#plt.show()
 
 # 3c) Moyennes pondérées par pays (barres horizontales triées)
-fig, axes = plt.subplots(2, 3, figsize=(18, 10))
-axes = axes.ravel()
-for ax, v in zip(axes, variables):
-    m = moy_pays[v].dropna().sort_values()
-    ax.barh(m.index, m.values)
-    ax.axvline(glob.loc[v, "moyenne"], color="red", linestyle="--", linewidth=1, label="moyenne globale")
-    ax.set_title(variables[v], fontsize=10)
-    ax.tick_params(axis="y", labelsize=8)
-axes[0].legend(fontsize=8)
-axes[-1].axis("off")
-fig.suptitle("Moyennes pondérées par pays", fontsize=13)
-fig.tight_layout()
-fig.savefig(f"{DOSSIER_FIG}/moyennes_par_pays.png", dpi=150)
-plt.show()
+#fig, axes = plt.subplots(2, 3, figsize=(18, 10))
+#axes = axes.ravel()
+#for ax, v in zip(axes, variables):
+    #m = moy_pays[v].dropna().sort_values()
+    #ax.barh(m.index, m.values)
+    #ax.axvline(glob.loc[v, "moyenne"], color="red", linestyle="--", linewidth=1, label="moyenne globale")
+    #ax.set_title(variables[v], fontsize=10)
+    #ax.tick_params(axis="y", labelsize=8)
+#axes[0].legend(fontsize=8)
+#axes[-1].axis("off")
+#fig.suptitle("Moyennes pondérées par pays", fontsize=13)
+#fig.tight_layout()
+#fig.savefig(f"{DOSSIER_FIG}/moyennes_par_pays.png", dpi=150)
+#plt.show()
 
 # 3d) Heatmap pays x variables (couleur = écart à la moyenne des pays, standardisé par variable)
-z = (moy_pays - moy_pays.mean()) / moy_pays.std()
-fig, ax = plt.subplots(figsize=(9, 9))
-im = ax.imshow(z.to_numpy(float), cmap="RdBu_r", vmin=-2.5, vmax=2.5, aspect="auto")
-ax.set_xticks(range(len(variables)))
-ax.set_xticklabels([v.replace("_", "\n") for v in variables], fontsize=9)
-ax.set_yticks(range(len(moy_pays)))
-ax.set_yticklabels(moy_pays.index, fontsize=9)
-for i in range(moy_pays.shape[0]):
-    for j in range(moy_pays.shape[1]):
-        val = moy_pays.iloc[i, j]
-        if pd.notna(val):
-            ax.text(j, i, f"{val:.1f}", ha="center", va="center", fontsize=8)
-fig.colorbar(im, ax=ax, label="Écart à la moyenne des pays (en écarts-types)")
-ax.set_title("Moyennes pondérées par pays (valeurs affichées, couleur standardisée)")
-fig.tight_layout()
-fig.savefig(f"{DOSSIER_FIG}/heatmap_pays.png", dpi=150)
-plt.show()
+#z = (moy_pays - moy_pays.mean()) / moy_pays.std()
+#fig, ax = plt.subplots(figsize=(9, 9))
+#im = ax.imshow(z.to_numpy(float), cmap="RdBu_r", vmin=-2.5, vmax=2.5, aspect="auto")
+#ax.set_xticks(range(len(variables)))
+#ax.set_xticklabels([v.replace("_", "\n") for v in variables], fontsize=9)
+#ax.set_yticks(range(len(moy_pays)))
+#ax.set_yticklabels(moy_pays.index, fontsize=9)
+#for i in range(moy_pays.shape[0]):
+    #for j in range(moy_pays.shape[1]):
+        #val = moy_pays.iloc[i, j]
+        #if pd.notna(val):
+        #    ax.text(j, i, f"{val:.1f}", ha="center", va="center", fontsize=8)
+#fig.colorbar(im, ax=ax, label="Écart à la moyenne des pays (en écarts-types)")
+#ax.set_title("Moyennes pondérées par pays (valeurs affichées, couleur standardisée)")
+#fig.tight_layout()
+#fig.savefig(f"{DOSSIER_FIG}/heatmap_pays.png", dpi=150)
+#plt.show()
 
 
 
 ##### Graphiques #####
 # Faire des graphiques au feeling pour avoir une idée des différentes variables
-
-
 
 
 
