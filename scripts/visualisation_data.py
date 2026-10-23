@@ -107,16 +107,23 @@ print(df_clean.head())
 
 ############# Création de variables #############
 
+# 1) Créer des variables qui en réunit
+# Par exmeple, pour créer une colonne nommée ""
+# def somme_df(df,colonne1,colonne2,nom_de_la_nouvelle_colonne):
+#   df[nom_de_la_nouvelle_colonne] = df[colonne1]+df[colonne2]
+#   return df
+
+# Essayer de créer des variables continue, et certaines des variables discretes pour varier !
 
 
+# 2) Ecrire le nom de ces nouvelles variables dans les categories suivantes :
 
 # contient toutes les variables finaux qu'on gardera après avoir vu le fichier stats_desc 
 variable_finaux = [] 
 
 # Parmi les variables ci-dessus, lesquels sont les variables "expliqué" ? Les mettre ici
-variable_expliqué = ["confiance_science"]
-# 
-variables_explicatives = [""]
+variable_expliqué = [] # 3 serait idéale
+variables_explicatives = [] # entre 3 et 8
 
 
 
