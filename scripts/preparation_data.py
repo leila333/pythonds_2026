@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 ############# But de ce script #############
 # récupèrer les données avec l'API
 # préparer ces données avant leur utilisation
@@ -95,3 +96,6 @@ def renommer_colonne(df: pd.DataFrame, liste_ancien_nom: list[str], liste_nouvea
 def normaliser_df(df):
     # Faut juste attendre qu'on ait nos variables pour pouvoir écrire cette fonction
     return df
+
+
+
