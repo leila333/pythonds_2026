@@ -107,31 +107,61 @@ print(df_clean.head())
 
 ############# Création de variables #############
 
-df_exemple = pd.DataFrame({
-    "nom": ["Alice", "Bob", "Chloé"],
-    "age": [25, 30, 28],
-    "ville": ["Paris", "Lyon", "Nantes"],
-    "taille": [100,120,140]
-})
+# 1) Nettoyage des valeurs hors échelles (sécurité non-réponses)
+complot_cols = ["complot_groupes_secrets", "complot_science_politique", "dissimulation_covid"]
+for col in complot_cols:
+    df_clean.loc[~df_clean[col].between(1, 5), col] = np.nan
 
-# 1) Créer des variables qui en réunit
-# Par exmeple, pour créer une colonne nommée ""
-# def somme_df(df,colonne1,colonne2,nom_de_la_nouvelle_colonne):
-#   df[nom_de_la_nouvelle_colonne] = df[colonne1]+df[colonne2]
-#   return df
+inst_cols = ["confiance_parlement", "confiance_politiques", "confiance_partis", "confiance_justice"]
+for col in inst_cols:
+    df_clean.loc[~df_clean[col].between(0, 10), col] = np.nan
 
-# L'idéal c'est d'avoir à la fin des variables discretes
-# et quelques une continues
+df_clean.loc[~df_clean["axe_gauche_droite"].between(0, 10), "axe_gauche_droite"] = np.nan
+df_clean.loc[~df_clean["decile_revenu"].between(1, 10), "decile_revenu"] = np.nan
+df_clean.loc[~df_clean["annees_etudes"].between(0, 25), "annees_etudes"] = np.nan
+df_clean.loc[~df_clean["degre_religiosite"].between(0, 10), "degre_religiosite"] = np.nan
 
 
-# 2) Ecrire le nom de ces nouvelles variables dans les categories suivantes :
+# 2) création des indicateurs synthétiques
+# A) Score moyen continu de complotisme (ramené de 0 à 10)
+df_clean["score_complot"] = (df_clean[complot_cols].mean(axis=1) - 1) * 2.5
 
-# contient toutes les variables finaux qu'on gardera après avoir vu le fichier stats_desc 
-variable_finaux = [] 
+# B) adhésion forte binaire (1 si au moins 2 réponses >= 4/5, sinon 0)
+df_clean["adhesion_complot_forte"] = ((df_clean[complot_cols] >= 4).sum(axis=1) >= 2).astype(int)
 
-# Parmi les variables ci-dessus, lesquels sont les variables "expliqué" ? Les mettre ici
-variable_expliqué = [] # 3 serait idéale
-variables_explicatives = [] # entre 3 et 8
+# C) confiance institutionnelle continue (moyenne de 0 à 10)
+df_clean["confiance_institutions"] = df_clean[inst_cols].mean(axis=1)
+
+# D) score socio-économique continu (façon IDH, borné de 0 à 1)
+rev_norm = (df_clean["decile_revenu"] - 1) / 9.0
+edu_norm = df_clean["annees_etudes"] / 25.0
+df_clean["score_socioeco"] = (rev_norm + edu_norm) / 2.0
+
+# E) radicalité politique (distance au centre 5 sur l'axe 0-10)
+df_clean["radicalite_politique"] = (df_clean["axe_gauche_droite"] - 5).abs()
+
+# F) zone rurale (binaire : 1 si village ou campagne, 0 sinon)
+df_clean["zone_rurale"] = df_clean["milieu_residence"].isin([4, 5]).astype(int)
+
+
+# 3) Renseignement des catégories finales
+variable_expliqué = [
+    "score_complot",             # Continue (0-10)
+    "adhesion_complot_forte",    # Discrète binaire (0 ou 1)
+    "dissimulation_covid",       # Discrète ordinale (1-5)
+]
+
+variables_explicatives = [
+    "confiance_institutions",    # Continue (0-10)
+    "confiance_science",         # Continue (0-10)
+    "radicalite_politique",      # Continue (0-5)
+    "score_socioeco",            # Continue (0-1)
+    "degre_religiosite",         # Continue (0-10)
+    "zone_rurale",               # Discrète binaire (0 ou 1)
+    "age",                       # Continue
+]
+
+variable_finaux = variable_expliqué + variables_explicatives
 
 
 
