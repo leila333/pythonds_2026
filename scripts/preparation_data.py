@@ -3,19 +3,14 @@ import pandas as pd
 
 
 ############# But de ce script #############
-# récupèrer les données avec l'API
-# préparer ces données avant leur utilisation
-
-# On pourra utiliser ce dataframe pour tester les fonctions
-df_exemple = pd.DataFrame({
-    "nom": ["Alice", "Bob", "Chloé"],
-    "age": [25, 30, 28],
-    "ville": ["Paris", "Lyon", "Nantes"],
-})
+# 1) récupèrer les données avec l'API 
+# 2) Fonctions utiles sur les dataframes
+# 3) Préparer ces données avant leur utilisation
 
 
 
-############# Récupération données par l'ESS API #############
+
+############# 1) Récupération données par l'ESS API ##########################
 
 # Le dico qui, à une année, renvoie le DOI des données correspondants
 dico_doi = {2023: "10.21338/ess11e04_2",
@@ -25,7 +20,7 @@ dico_doi = {2023: "10.21338/ess11e04_2",
             2014: "10.21338/ess7e02_3"}
 
 
-# Cette fonction récupère les données de l'ESS
+# Cette fonction récupère les données de l'ESS (confère documentation de l'API)
 def recuperer_donnees(annee):
     host = "https://api.ess.sikt.no"
     user_id = input("Saisis ESS User ID : ")
@@ -36,55 +31,27 @@ def recuperer_donnees(annee):
 
 
 
-############# Préparations des données #############
+
+########################## 2) Fonction utiles ##########################
+
+# On pourra utiliser ce dataframe pour tester les fonctions
+df_exemple = pd.DataFrame({
+    "nom": ["Alice", "Bob", "Chloé"],
+    "age": [25, 30, 28],
+    "ville": ["Paris", "Lyon", "Nantes"],
+})
+
 
 def select_colonne(df: pd.DataFrame, liste_colonnes: list[str]) -> pd.DataFrame:
-    """
-    Sélectionne un sous-ensemble de colonnes dans un DataFrame pandas.
-
-    Paramètre :
-    ----------
-    df : pd.DataFrame (le DataFrame source)
-    liste_colonnes : list of str (liste des noms des colonnes à conserver)
-
-    Retourne :
-    -------
-    pd.DataFrame (nouveau DataFrame ne contenant que les colonnes sélectionnées)
-    """
     return df[liste_colonnes].copy()
 
 
 
 def suppr_colonne(df: pd.DataFrame, liste_colonnes: list[str]) -> pd.DataFrame:
-    """
-    Supprime une liste de colonnes d'un DataFrame pandas.
-
-    Paramètre :
-    ----------
-    df : pd.DataFrame (le DataFrame source)
-    liste_colonnes : list of str (liste des noms des colonnes à supprimer)
-
-    Retourne :
-    -------
-    pd.DataFrame (nouveau DataFrame sans les colonnes spécifiées)
-    """
     return df.drop(columns=liste_colonnes)
 
 
 def renommer_colonne(df: pd.DataFrame, liste_ancien_nom: list[str], liste_nouveau_nom: list[str]) -> pd.DataFrame:
-    """
-    Renomme des colonnes d'un DataFrame à partir de deux listes ordonnées.
-
-    Paramètre :
-    ----------
-    df : pd.DataFrame (le DataFrame source)
-    liste_ancien_nom : list of str (liste des anciens noms de colonnes)
-    liste_nouveau_nom : list of str (liste des nouveaux noms correspondants)
-
-    Retourne :
-    -------
-    pd.DataFrame (nouveau DataFrame avec les colonnes renommées)
-    """
     if len(liste_ancien_nom) != len(liste_nouveau_nom):
         raise ValueError(
             "Les deux listes doivent avoir exactement la même longueur."
@@ -93,9 +60,88 @@ def renommer_colonne(df: pd.DataFrame, liste_ancien_nom: list[str], liste_nouvea
     mapping = dict(zip(liste_ancien_nom, liste_nouveau_nom))
     return df.rename(columns=mapping)
 
+
 def normaliser_df(df):
     # Faut juste attendre qu'on ait nos variables pour pouvoir écrire cette fonction
     return df
 
 
 
+
+########################## 3) Préparations des données ##########################
+# On utilise la documentation sur les variables : https://ess.sikt.no/en/datafile/242aaa39-3bbb-40f5-98bf-bfb1ce53d8ef
+
+#Liste des colonnes potentiellement pertinentes pour l'étude sur les théories du complot (ESS Round 10)
+colonnes_a_garder = [
+    # --- 1) identifiants et pondérations méthodologiques ---
+    "idno",       # Identifiant unique de l'individu
+    "cntry",      # Pays de résidence (essentiel pour les comparaisons européennes)
+    "anweight",   # Poids d'analyse (corrige les biais d'échantillonnage nationaux)
+    "dweight",    # Poids de sondage (design weight)
+    "pspwght",    # Poids post-stratification
+
+    # --- 2) Ccoyances aux théories du complot & attitudes face à la science ---
+    "secgrdec",   # Groupes secrets qui influencent/dirigent les décisions politiques
+    "scidecpb",   # Scientifiques et figures politiques qui s'entendent en secret
+    "gvconc19",   # Dissimulation par le gouvernement d'informations clés sur le Covid-19
+    "gvimpc19",   # Intention réelle derrière les mesures sanitaires (contrôle vs santé)
+    "gvbalc19",   # Équilibre des décisions sanitaires perçu (santé vs intérêts)
+    "trstsci",    # Confiance dans la science et les scientifiques
+    "getnvc19",   # Raisons ou volonté de refus de la vaccination Covid-19
+    "icvacc19",   # Statut vaccinal Covid-19 (a reçu le vaccin oui/non)
+
+    # --- 3. positionnement politique & confiance institutionnelle ---
+    "lrscale",    # Positionnement politique sur l'axe gauche-droite (échelle 0-10)
+    "polintr",    # Degré d'intérêt pour la politique
+    "vote",       # Participation électorale aux dernières élections
+    "clsprty",    # Sentiment de proximité avec un parti politique en particulier
+    "prtdgcl",    # Degré d'attachement à ce parti
+    "trstprl",    # Confiance dans le parlement national
+    "trstplt",    # Confiance dans les hommes et femmes politiques
+    "trstprt",    # Confiance dans les partis politiques
+    "trstlgl",    # Confiance dans la justice / le système judiciaire
+    "trstplc",    # Confiance dans la police
+    "cptppola",   # Sentiment d'efficacité politique (capacité des citoyens à peser sur le système)
+    "psppipla",   # Sentiment que le système politique prend en compte les citoyens
+
+    # --- 4. éducation & capital socio-économique ---
+    "eisced",     # Plus haut diplôme obtenu (standard européen ES-ISCED)
+    "eduyrs",     # Nombre d'années complètes d'études
+    "hinctnta",   # Revenu net total du ménage (en déciles nationaux)
+    "hincfel",    # Perception du niveau de revenu (vit confortablement / difficultés)
+    "mainact",    # Activité principale (emploi, études, chômage, retraite...)
+    "uempla",     # Situation de recherche d'emploi / chômage
+    "domicil",    # Degré d'urbanisation de la zone de vie (métropole, banlieue, rural...)
+
+    # --- 5. religion, croyances & spiritualité ---
+    "rlgblg",     # Sentiment d'appartenance à une religion particulière (oui/non)
+    "rlgdgr",     # Intensité du sentiment religieux (échelle 0-10)
+    "rlgatnd",    # Fréquence de fréquentation des lieux de culte
+    "pray",       # Fréquence de la prière en dehors des offices religieux
+
+    # --- 6. données démographiques fondamentales ---
+    "gndr",       # Genre (1 = Homme, 2 = Femme)
+    "agea",       # Âge exact du répondant
+    "yrbrn",      # Année de naissance
+]
+
+# Noms explicites en français correspondants exactement à colonnes_a_garder
+nouveaux_noms = [
+    # 1) identifiants & poids
+    "id", "pays", "poids_analyse", "poids_design", "poids_poststrat",
+    # 2) Ccoyances complotistes & science
+    "complot_groupes_secrets", "complot_science_politique", "dissimulation_covid", 
+    "mesures_sanitaires_controle", "mesures_sanitaires_equilibre", "confiance_science", 
+    "refus_vaccin", "statut_vaccine",
+    # 3) politique & institutions
+    "axe_gauche_droite", "interet_politique", "a_vote", "proche_parti", "degre_proximite_parti",
+    "confiance_parlement", "confiance_politiques", "confiance_partis", "confiance_justice", 
+    "confiance_police", "efficacite_politique_citoyen", "prise_en_compte_citoyen",
+    # 4) éducation & socio-éco
+    "niveau_etudes_isced", "annees_etudes", "decile_revenu", "sentiment_revenu", 
+    "activite_principale", "chomage", "milieu_residence",
+    # 5) religion & spiritualité
+    "appartenance_religieuse", "degre_religiosite", "frequence_culte", "frequence_priere",
+    # 6) démographie
+    "genre", "age", "annee_naissance"
+]
