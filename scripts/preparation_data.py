@@ -139,3 +139,9 @@ nouveaux_noms = [
     # 6) démographie
     "genre", "age", "annee_naissance"
 ]
+
+
+complot_cols = ["complot_groupes_secrets", "complot_science_politique", "dissimulation_covid"]
+
+
+inst_cols = ["confiance_parlement", "confiance_politiques", "confiance_partis", "confiance_justice"]

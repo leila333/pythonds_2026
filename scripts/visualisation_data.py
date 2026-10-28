@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 from preparation_data import recuperer_donnees, dico_doi, select_colonne, suppr_colonne, renommer_colonne
-from preparation_data import colonnes_a_garder, nouveaux_noms
+from preparation_data import colonnes_a_garder, nouveaux_noms, complot_cols, inst_cols
 
 
 ############# But de ce script #############
@@ -32,22 +32,7 @@ print(df_clean.head())
 
 ############# Création de variables #############
 
-# 1) Nettoyage des valeurs hors échelles (sécurité non-réponses)
-complot_cols = ["complot_groupes_secrets", "complot_science_politique", "dissimulation_covid"]
-for col in complot_cols:
-    df_clean.loc[~df_clean[col].between(1, 5), col] = np.nan
-
-inst_cols = ["confiance_parlement", "confiance_politiques", "confiance_partis", "confiance_justice"]
-for col in inst_cols:
-    df_clean.loc[~df_clean[col].between(0, 10), col] = np.nan
-
-df_clean.loc[~df_clean["axe_gauche_droite"].between(0, 10), "axe_gauche_droite"] = np.nan
-df_clean.loc[~df_clean["decile_revenu"].between(1, 10), "decile_revenu"] = np.nan
-df_clean.loc[~df_clean["annees_etudes"].between(0, 25), "annees_etudes"] = np.nan
-df_clean.loc[~df_clean["degre_religiosite"].between(0, 10), "degre_religiosite"] = np.nan
-
-
-# 2) création des indicateurs synthétiques
+# 1,2) création des indicateurs synthétiques
 # A) Score moyen continu de complotisme (ramené de 0 à 10)
 df_clean["score_complot"] = (df_clean[complot_cols].mean(axis=1) - 1) * 2.5
 
