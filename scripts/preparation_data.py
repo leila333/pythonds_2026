@@ -61,12 +61,6 @@ def renommer_colonne(df: pd.DataFrame, liste_ancien_nom: list[str], liste_nouvea
     return df.rename(columns=mapping)
 
 
-def normaliser_df(df):
-    # Faut juste attendre qu'on ait nos variables pour pouvoir écrire cette fonction
-    return df
-
-
-
 
 ########################## 3) Préparations des données ##########################
 # On utilise la documentation sur les variables : https://ess.sikt.no/en/datafile/242aaa39-3bbb-40f5-98bf-bfb1ce53d8ef

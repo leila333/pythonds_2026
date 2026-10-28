@@ -11,9 +11,9 @@ FAIRE UNE COURTE DESCRIPTION PROJET ICI ET LA PROBLEMATIQUE
 
 ### Organisation du projet
 
-Il se compose d'un rapport final et .....
+Ce projet se compose de scripts python dans le dossier "scripts" contenant des fonctions et des variables utilisées dans le rapport final qui se lit s'execute de manière linéaire.
 
-On pensera à écrire dans le terminal "cd pythonds_2026"
+Avant de lancer le rapport final, on pensera à **écrire dans le terminal "cd pythonds_2026"**
 
 ### Données
 
