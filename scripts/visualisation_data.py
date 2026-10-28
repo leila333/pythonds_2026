@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 from preparation_data import recuperer_donnees, dico_doi, select_colonne, suppr_colonne, renommer_colonne
-from preparation_data import colonnes_a_garder, nouveaux_noms, complot_cols, inst_cols
+from preparation_data import colonnes_a_garder, nouveaux_noms, complot_cols, inst_cols, variable_expliqué, variables_explicatives, variable_finaux
 
 
 ############# But de ce script #############
@@ -52,35 +52,6 @@ df_clean["radicalite_politique"] = (df_clean["axe_gauche_droite"] - 5).abs()
 
 # F) zone rurale (binaire : 1 si village ou campagne, 0 sinon)
 df_clean["zone_rurale"] = df_clean["milieu_residence"].isin([4, 5]).astype(int)
-
-
-# 3) Renseignement des catégories finales
-variable_expliqué = [
-    "score_complot",             # Continue (0-10)
-    "adhesion_complot_forte",    # Discrète binaire (0 ou 1)
-    "dissimulation_covid",       # Discrète ordinale (1-5)
-]
-
-variables_explicatives = [
-    "confiance_institutions",    # Continue (0-10)
-    "confiance_science",         # Continue (0-10)
-    "radicalite_politique",      # Continue (0-5)
-    "score_socioeco",            # Continue (0-1)
-    "degre_religiosite",         # Continue (0-10)
-    "zone_rurale",               # Discrète binaire (0 ou 1)
-    "age",                       # Continue
-]
-
-variable_finaux = variable_expliqué + variables_explicatives
-
-
-
-
-
-
-
-
-
 
 
 

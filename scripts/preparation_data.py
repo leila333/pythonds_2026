@@ -65,6 +65,8 @@ def renommer_colonne(df: pd.DataFrame, liste_ancien_nom: list[str], liste_nouvea
 ########################## 3) Préparations des données ##########################
 # On utilise la documentation sur les variables : https://ess.sikt.no/en/datafile/242aaa39-3bbb-40f5-98bf-bfb1ce53d8ef
 
+# 2. Valeurs manquantes
+
 #Liste des colonnes potentiellement pertinentes pour l'étude sur les théories du complot (ESS Round 10)
 colonnes_a_garder = [
     # --- 1) identifiants et pondérations méthodologiques ---
@@ -141,7 +143,30 @@ nouveaux_noms = [
 ]
 
 
+# 3. Creation de variables aggrégées
+
+# Variables contribuant à la futur nouvelle variable "score_complot"
 complot_cols = ["complot_groupes_secrets", "complot_science_politique", "dissimulation_covid"]
 
-
+# Variables contribuant à la futur nouvelle variable "confiance_institutions"
 inst_cols = ["confiance_parlement", "confiance_politiques", "confiance_partis", "confiance_justice"]
+
+
+# 3) Variables finales du dataframe df_final qui sera utilisé dans la partie III. du rapport
+variable_expliqué = [
+    "score_complot",             # Continue (0-10)
+    "adhesion_complot_forte",    # Discrète binaire (0 ou 1)
+    "dissimulation_covid",       # Discrète ordinale (1-5)
+]
+
+variables_explicatives = [
+    "confiance_institutions",    # Continue (0-10)
+    "confiance_science",         # Continue (0-10)
+    "radicalite_politique",      # Continue (0-5)
+    "score_socioeco",            # Continue (0-1)
+    "degre_religiosite",         # Continue (0-10)
+    "zone_rurale",               # Discrète binaire (0 ou 1)
+    "age",                       # Continue
+]
+
+variable_finaux = variable_expliqué + variables_explicatives
