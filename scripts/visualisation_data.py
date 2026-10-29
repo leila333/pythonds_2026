@@ -57,8 +57,6 @@ df_clean["zone_rurale"] = df_clean["milieu_residence"].isin([4, 5]).astype(int)
 
 
 
-
-
 ############# Exploration et visualisation des données #############
 
 ##### Valeurs manquantes #####
