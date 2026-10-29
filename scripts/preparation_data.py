@@ -79,7 +79,7 @@ colonnes_a_garder = [
     # --- 2) Ccoyances aux théories du complot & attitudes face à la science ---
     "secgrdec",   # Groupes secrets qui influencent/dirigent les décisions politiques
     "scidecpb",   # Scientifiques et figures politiques qui s'entendent en secret
-    "gvconc19",   # Dissimulation par le gouvernement d'informations clés sur le Covid-19
+    "gvconc19",   # Dissimulation par le gouvernement d'informations clés sur le Covid-19 et il est le résultat d'efforts délibéré des gouvernements/ d'une organisation
     "gvimpc19",   # Intention réelle derrière les mesures sanitaires (contrôle vs santé)
     "gvbalc19",   # Équilibre des décisions sanitaires perçu (santé vs intérêts)
     "trstsci",    # Confiance dans la science et les scientifiques
