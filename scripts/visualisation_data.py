@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+from IPython.display import display
 
 
 ############# But de ce script #############
@@ -33,7 +34,7 @@ def quantile_pondere(x, w, q):
     return np.interp(q, cum, x_s)
 
 
-# --- Tableau 1 : variables continues ---
+
 
 # Dictionnaire utilisée dans la fonction stats_continues()
 libelles = {
@@ -49,6 +50,7 @@ libelles = {
     "adhesion_complot_forte": "Adhésion forte aux théories du complot",
 }
 
+# Renvoie un df contenant des stats desc sur les variables qui doivent être continues
 def creer_df_stats_continues(df, variables, poids):
     lignes = {}
     for v in variables:
@@ -81,13 +83,6 @@ def display_stats_desc(df, titre):
     })
     .set_caption(titre)
 )
-
-# "N valides": "{:.0f}",
-     #   "Moyenne (pond.)": "{:.2f}",
-     #   "Écart-type (pond.)": "{:.2f}",
-     #   "Q1 (pond.)": "{:.2f}",
-     #   "Médiane (pond.)": "{:.2f}",
-      #  "Q3 (pond.)": "{:.2f}",
 
 
 
