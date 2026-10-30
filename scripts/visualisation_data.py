@@ -65,9 +65,7 @@ def creer_df_stats_continues(df, variables, poids):
     return pd.DataFrame(lignes).T.round(2)
 
 
-
-
-def display_stats_desc_explicative(df, titre):
+def display_stats_desc(df, titre):
     display(
     df.style
     .format({
