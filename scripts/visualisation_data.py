@@ -281,5 +281,3 @@ def stats(d, var):
 
 
 
-
-
