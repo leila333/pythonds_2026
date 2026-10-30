@@ -36,7 +36,7 @@ def quantile_pondere(x, w, q):
 
 
 # --- Tableau 1 : variables continues ---
-def stats_continues(df, variables, poids):
+def stats_continues(df, variables, poids, libelles):
     lignes = {}
     for v in variables:
         sub = df[[v, poids]].dropna()
