@@ -2,8 +2,6 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-from preparation_data import recuperer_donnees, dico_doi, select_colonne, suppr_colonne, renommer_colonne
-from preparation_data import colonnes_a_garder, nouveaux_noms, complot_cols, inst_cols, variable_expliqué, variables_explicatives, variable_finaux
 
 
 ############# But de ce script #############
@@ -36,7 +34,20 @@ def quantile_pondere(x, w, q):
 
 
 # --- Tableau 1 : variables continues ---
-def stats_continues(df, variables, poids, libelles):
+libelles = {
+    "confiance_institutions": "Confiance dans les institutions (0-10)",
+    "score_socioeco": "Score socio-économique (0-1)",
+    "radicalite_politique": "Radicalité politique (0-5)",
+    "confiance_science": "Confiance dans la science (0-10)",
+    "degre_religiosite": "Degré de religiosité (0-10)",
+    "age": "Âge (années)",
+    "zone_rurale": "Zone rurale (0/1)",
+    "score_complot": "Score de complotisme (0-10)",
+    "dissimulation_covid": "Perception de dissimulation Covid (ordinale)",
+    "adhesion_complot_forte": "Adhésion forte aux théories du complot",
+}
+
+def stats_continues(df, variables, poids):
     lignes = {}
     for v in variables:
         sub = df[[v, poids]].dropna()
@@ -56,8 +67,6 @@ def stats_continues(df, variables, poids, libelles):
 
 
 
-
-
 ########################## 2) BROUILLON ################################################
 
 
@@ -66,16 +75,20 @@ def stats_continues(df, variables, poids, libelles):
 
 ############# Préparation des données #############
 
-df_ess_2020 = recuperer_donnees(2020)
-print(df_ess_2020.shape)
-print(df_ess_2020.head())
+#from preparation_data import recuperer_donnees, dico_doi, select_colonne, suppr_colonne, renommer_colonne
+#from preparation_data import colonnes_a_garder, nouveaux_noms, complot_cols, inst_cols, variable_expliqué, variables_explicatives, variable_finaux
+
+
+#df_ess_2020 = recuperer_donnees(2020)
+#print(df_ess_2020.shape)
+#print(df_ess_2020.head())
 
 # Filtrage puis renommage
-df_filtre = select_colonne(df_ess_2020, colonnes_a_garder)
-df_clean = renommer_colonne(df_filtre, colonnes_a_garder, nouveaux_noms)
+#df_filtre = select_colonne(df_ess_2020, colonnes_a_garder)
+#df_clean = renommer_colonne(df_filtre, colonnes_a_garder, nouveaux_noms)
 
-print("Dimensions après filtrage :", df_clean.shape)
-print(df_clean.head())
+#print("Dimensions après filtrage :", df_clean.shape)
+#print(df_clean.head())
 
 
 
@@ -85,24 +98,24 @@ print(df_clean.head())
 
 # 1,2) création des indicateurs synthétiques
 # A) Score moyen continu de complotisme (ramené de 0 à 10)
-df_clean["score_complot"] = (df_clean[complot_cols].mean(axis=1) - 1) * 2.5
+#df_clean["score_complot"] = (df_clean[complot_cols].mean(axis=1) - 1) * 2.5
 
 # B) adhésion forte binaire (1 si au moins 2 réponses >= 4/5, sinon 0)
-df_clean["adhesion_complot_forte"] = ((df_clean[complot_cols] >= 4).sum(axis=1) >= 2).astype(int)
+#df_clean["adhesion_complot_forte"] = ((df_clean[complot_cols] >= 4).sum(axis=1) >= 2).astype(int)
 
 # C) confiance institutionnelle continue (moyenne de 0 à 10)
-df_clean["confiance_institutions"] = df_clean[inst_cols].mean(axis=1)
+#df_clean["confiance_institutions"] = df_clean[inst_cols].mean(axis=1)
 
 # D) score socio-économique continu (façon IDH, borné de 0 à 1)
-rev_norm = (df_clean["decile_revenu"] - 1) / 9.0
-edu_norm = df_clean["annees_etudes"] / 25.0
-df_clean["score_socioeco"] = (rev_norm + edu_norm) / 2.0
+#rev_norm = (df_clean["decile_revenu"] - 1) / 9.0
+#edu_norm = df_clean["annees_etudes"] / 25.0
+#df_clean["score_socioeco"] = (rev_norm + edu_norm) / 2.0
 
 # E) radicalité politique (distance au centre 5 sur l'axe 0-10)
-df_clean["radicalite_politique"] = (df_clean["axe_gauche_droite"] - 5).abs()
+#df_clean["radicalite_politique"] = (df_clean["axe_gauche_droite"] - 5).abs()
 
 # F) zone rurale (binaire : 1 si village ou campagne, 0 sinon)
-df_clean["zone_rurale"] = df_clean["milieu_residence"].isin([4, 5]).astype(int)
+#df_clean["zone_rurale"] = df_clean["milieu_residence"].isin([4, 5]).astype(int)
 
 
 
@@ -116,26 +129,26 @@ df_clean["zone_rurale"] = df_clean["milieu_residence"].isin([4, 5]).astype(int)
 ############# Valeurs manquantes #############
 
 # Nombre et part de NaN par variable
-manquantes = pd.DataFrame({
-    "variable": df_clean.columns,
-    "nb_manquantes": df_clean.isna().sum().values,
-    "pct_manquantes": (df_clean.isna().mean() * 100).round(2).values,
-})
+#manquantes = pd.DataFrame({
+    #"variable": df_clean.columns,
+    #"nb_manquantes": df_clean.isna().sum().values,
+    #"pct_manquantes": (df_clean.isna().mean() * 100).round(2).values,
+#})
 
-manquantes = manquantes.sort_values("pct_manquantes", ascending=False).reset_index(drop=True)
+#manquantes = manquantes.sort_values("pct_manquantes", ascending=False).reset_index(drop=True)
 
 # Affichage en tableau (console)
 #print(manquantes.to_string(index=False))
 
 # Dans un notebook (Jupyter, VSCode)
-manquantes.style.background_gradient(subset=["pct_manquantes"], cmap="Reds").format({"pct_manquantes": "{:.2f} %"})
+#manquantes.style.background_gradient(subset=["pct_manquantes"], cmap="Reds").format({"pct_manquantes": "{:.2f} %"})
 
 #manquantes.to_csv("valeurs_manquantes.csv", index=False)
 #manquantes.to_latex("valeurs_manquantes.tex", index=False, float_format="%.2f")
 
 #on regarde les valeurs manquantes par pays : 
-manq_pays = (df_clean.drop(columns=["id"]).isna()
-             .groupby(df_clean["pays"]).mean().mul(100).round(1))
+#manq_pays = (df_clean.drop(columns=["id"]).isna()
+#             .groupby(df_clean["pays"]).mean().mul(100).round(1))
 
 # Variables clés
 cles = ["complot_groupes_secrets", "complot_science_politique", "dissimulation_covid",
@@ -171,20 +184,20 @@ variables = {
 }
 
 ############# Nettoyage #############
-df = df_clean.copy()
+#df = df_clean.copy()
 
 # Sécurité : codes de non-réponse (77, 88, 99, ...) -> NaN
-for v in ["confiance_science", "axe_gauche_droite", "confiance_politiques", "degre_religiosite"]:
-    df.loc[~df[v].between(0, 10), v] = np.nan
-df.loc[~df["interet_politique"].between(1, 4), "interet_politique"] = np.nan
+#for v in ["confiance_science", "axe_gauche_droite", "confiance_politiques", "degre_religiosite"]:
+#    df.loc[~df[v].between(0, 10), v] = np.nan
+#df.loc[~df["interet_politique"].between(1, 4), "interet_politique"] = np.nan
 
 # Dans l'ESS, polintr est codé 1 = très intéressé ... 4 = pas du tout : on inverse
 # pour que "plus haut = plus intéressé" (comme les autres échelles)
-df["interet_politique"] = 5 - df["interet_politique"]
+#df["interet_politique"] = 5 - df["interet_politique"]
 
 # Pays où confiance_science est (quasi) complète
-part_manq = df.groupby("pays")["confiance_science"].apply(lambda s: s.isna().mean())
-pays_science = part_manq[part_manq < SEUIL_MANQ].index
+#part_manq = df.groupby("pays")["confiance_science"].apply(lambda s: s.isna().mean())
+#pays_science = part_manq[part_manq < SEUIL_MANQ].index
 #print("Pays retenus pour confiance_science :", list(pays_science))
 #print("Pays exclus :", list(part_manq[part_manq >= SEUIL_MANQ].index))
 
