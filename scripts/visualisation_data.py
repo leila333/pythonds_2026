@@ -9,6 +9,57 @@ from preparation_data import colonnes_a_garder, nouveaux_noms, complot_cols, ins
 ############# But de ce script #############
 # explorer les données et visualiser afin de savoir lesquels mettre dans le rapport final
 
+# 1) Fonctions utiles
+# 2) Brouillon (ne pas regarder)
+
+
+
+
+########################## 1) Fonctions utiles ################################################
+
+
+# --- Fonctions utilitaires pondérées ---
+def moyenne_ponderee(x, w):
+    return np.average(x, weights=w)
+
+
+def ecart_type_pondere(x, w):
+    m = np.average(x, weights=w)
+    return np.sqrt(np.average((x - m) ** 2, weights=w))
+
+
+def quantile_pondere(x, w, q):
+    idx = np.argsort(x.values)
+    x_s, w_s = x.values[idx], w.values[idx]
+    cum = (np.cumsum(w_s) - 0.5 * w_s) / w_s.sum()
+    return np.interp(q, cum, x_s)
+
+
+# --- Tableau 1 : variables continues ---
+def stats_continues(df, variables, poids):
+    lignes = {}
+    for v in variables:
+        sub = df[[v, poids]].dropna()
+        x, w = sub[v], sub[poids]
+        lignes[libelles.get(v, v)] = {
+            "N valides": len(sub),
+            "Moyenne (pond.)": moyenne_ponderee(x, w),
+            "Écart-type (pond.)": ecart_type_pondere(x, w),
+            "Q1 (pond.)": quantile_pondere(x, w, 0.25),
+            "Médiane (pond.)": quantile_pondere(x, w, 0.50),
+            "Q3 (pond.)": quantile_pondere(x, w, 0.75),
+        }
+    return pd.DataFrame(lignes).T.round(2)
+
+
+
+
+
+
+
+
+########################## 2) BROUILLON ################################################
+
 
 
 
@@ -268,10 +319,6 @@ def stats(d, var):
 #fig.savefig(f"{DOSSIER_FIG}/heatmap_pays.png", dpi=150)
 #plt.show()
 
-
-
-##### Graphiques #####
-# Faire des graphiques au feeling pour avoir une idée des différentes variables
 
 
 
