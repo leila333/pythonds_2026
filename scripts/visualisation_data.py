@@ -34,6 +34,8 @@ def quantile_pondere(x, w, q):
 
 
 # --- Tableau 1 : variables continues ---
+
+# Dictionnaire utilisée dans la fonction stats_continues()
 libelles = {
     "confiance_institutions": "Confiance dans les institutions (0-10)",
     "score_socioeco": "Score socio-économique (0-1)",
@@ -47,7 +49,7 @@ libelles = {
     "adhesion_complot_forte": "Adhésion forte aux théories du complot",
 }
 
-def stats_continues(df, variables, poids):
+def creer_df_stats_continues(df, variables, poids):
     lignes = {}
     for v in variables:
         sub = df[[v, poids]].dropna()
@@ -64,6 +66,30 @@ def stats_continues(df, variables, poids):
 
 
 
+
+def display_stats_desc_explicative(df, titre):
+    display(
+    df.style
+    .format({
+        "N valides": "{:.0f}",
+        "% manquants": "{:.1f}",
+        "Moyenne (pond.)": "{:.2f}",
+        "Écart-type (pond.)": "{:.2f}",
+        "Min": "{:.2f}",
+        "Q1 (pond.)": "{:.2f}",
+        "Médiane (pond.)": "{:.2f}",
+        "Q3 (pond.)": "{:.2f}",
+        "Max": "{:.2f}",
+    })
+    .set_caption(titre)
+)
+
+# "N valides": "{:.0f}",
+     #   "Moyenne (pond.)": "{:.2f}",
+     #   "Écart-type (pond.)": "{:.2f}",
+     #   "Q1 (pond.)": "{:.2f}",
+     #   "Médiane (pond.)": "{:.2f}",
+      #  "Q3 (pond.)": "{:.2f}",
 
 
 
