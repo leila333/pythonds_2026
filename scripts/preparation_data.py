@@ -34,15 +34,12 @@ def recuperer_donnees_API(annee):
 # Cette fonction recupere les données avec le csv, au cas où l'API ne fonctionne plus
 def recuperer_donnees():
     # On récupère les données
-    if os.path.exists("data/ESS10e03_3.csv"):
-        df = pd.read_csv("data/ESS10e03_3.csv")
+    if os.path.exists("data/Ess_2020.parquet"):
+        df = pd.read_csv("data/Ess_2020.parquet")
     else:
         df = None
         print("Le fichier n'a pas été trouvé. Etes vous bien dans le dossier pythonds_2026 ?")
     
-    # On remplace les valeurs de non réponse comme des valeurs manquantes
-    
-
     return df
 
 
