@@ -31,7 +31,7 @@ def recuperer_donnees_API(annee):
     return df
 
 
-# Cette fonction recupere les données avec le csv, au cas où l'API ne fonctionne plus
+# Cette fonction recupere les données avec le parquet, au cas où l'API ne fonctionne plus
 def recuperer_donnees():
     # On récupère les données
     if os.path.exists("data/Ess_2020.parquet"):

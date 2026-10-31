@@ -19,9 +19,9 @@ Avant de lancer le rapport final, on pensera à installer les dépendances décr
 
 L’European Social Survey (ESS) est une enquête menée dans plusieurs pays européens pour étudier les opinions, les valeurs et les comportements des populations. Ce projet utilise les données de l’ESS Round 10, édition 3.3, collectées à partir de 2020.
 
-- Données et documentation de l'ESS Round 10 - https://ess.sikt.no/en/datafile/f37d014a-6958-42d4-b03b-17c29e481d3d
-- Accès aux données des différents rounds: ESS Data Portal - https://ess.sikt.no/en/series/321b06ad-1b98-4b7d-93ad-ca8a24e8788a (création d’un compte nécessaire)
-- API : Documentation de l’API ESS - https://ess.sikt.no/en/api
+Dans le rapport final, on propose deux moyens pour récupérer le jeux de données utilisé :
+- soit avec l'API dédiée (https://ess.sikt.no/en/api)  
+- soit avec un fichier ESS_2020.parquet dans le repo qui a été créée à partir du fichier csv de l'ESS Round 10 édition 3.3 récupérable au lien https://ess.sikt.no/en/datafile/f37d014a-6958-42d4-b03b-17c29e481d3d (création d'un compte nécessaire et gratuit). Ce fichier parquet est une adaptation du fichier csv d'origine afin d'être le même que celui récupéré par l'API. Les détails sur ce fichier parquet sont dans le rapport final.
 
 ##### Licences
 
