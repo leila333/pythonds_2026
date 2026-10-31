@@ -19,8 +19,8 @@ Avant de lancer le rapport final, on pensera à installer les dépendances décr
 
 L’European Social Survey (ESS) est une enquête menée dans plusieurs pays européens pour étudier les opinions, les valeurs et les comportements des populations. Ce projet utilise les données de l’ESS Round 10, édition 3.3, collectées à partir de 2020.
 
-- Données et documentation : ESS Round 10 - https://ess.sikt.no/en/datafile/f37d014a-6958-42d4-b03b-17c29e481d3d
-- Accès aux données : ESS Data Portal - https://ess.sikt.no/en/series/321b06ad-1b98-4b7d-93ad-ca8a24e8788a (création d’un compte nécessaire)
+- Données et documentation de l'ESS Round 10 - https://ess.sikt.no/en/datafile/f37d014a-6958-42d4-b03b-17c29e481d3d
+- Accès aux données des différents rounds: ESS Data Portal - https://ess.sikt.no/en/series/321b06ad-1b98-4b7d-93ad-ca8a24e8788a (création d’un compte nécessaire)
 - API : Documentation de l’API ESS - https://ess.sikt.no/en/api
 
 ##### Licences
