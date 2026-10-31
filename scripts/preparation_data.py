@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import os
 
 
 ############# But de ce script #############
@@ -21,12 +22,27 @@ dico_doi = {2023: "10.21338/ess11e04_2",
 
 
 # Cette fonction récupère les données de l'ESS (confère documentation de l'API)
-def recuperer_donnees(annee):
+def recuperer_donnees_API(annee):
     host = "https://api.ess.sikt.no"
     user_id = input("Saisis ESS User ID : ")
     doi = dico_doi[annee]
     url = f"{host}/v1/data/dataFile/{doi}?userId={user_id}&recodeMissingValues"
     df = pd.read_parquet(url)
+    return df
+
+
+# Cette fonction recupere les données avec le csv, au cas où l'API ne fonctionne plus
+def recuperer_donnees():
+    # On récupère les données
+    if os.path.exists("data/ESS10e03_3.csv"):
+        df = pd.read_csv("data/ESS10e03_3.csv")
+    else:
+        df = None
+        print("Le fichier n'a pas été trouvé. Etes vous bien dans le dossier pythonds_2026 ?")
+    
+    # On remplace les valeurs de non réponse comme des valeurs manquantes
+    
+
     return df
 
 
