@@ -28,8 +28,8 @@ def ecart_type_pondere(x, w):
 
 
 def quantile_pondere(x, w, q):
-    idx = np.argsort(x.values)
-    x_s, w_s = x.values[idx], w.values[idx]
+    idx = np.argsort(x)
+    x_s, w_s = x[idx], w[idx]
     cum = (np.cumsum(w_s) - 0.5 * w_s) / w_s.sum()
     return np.interp(q, cum, x_s)
 
