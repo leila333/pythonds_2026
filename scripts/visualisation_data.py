@@ -115,6 +115,55 @@ def piechart_pondere(df, titre, var, nom_var, poids, labels, couleurs):
     plt.show()
 
 
+def heatmap_covid(df, var_y, titre, ylabel, ax):
+    d = df.dropna(subset=["dissimulation_covid", var_y])
+
+    table_pct = pd.crosstab(
+        d[var_y],
+        d["dissimulation_covid"],
+        normalize="index"
+    ) * 100
+
+    # Inverser l'ordre de l'ordonnée
+    table_pct = table_pct.iloc[::-1]
+
+    sns.heatmap(
+        table_pct,
+        annot=True,
+        fmt=".1f",
+        cmap="Blues",
+        vmin=0,
+        vmax=32,
+        ax=ax
+    )
+
+    ax.set_title(titre)
+    ax.set_xlabel("Dissimulation du Covid")
+    ax.set_ylabel(ylabel)
+
+
+def barplot_covid(df, x_var, titre, xlabel, ax):
+    d = df.dropna(subset=["dissimulation_covid", x_var]).copy()
+
+    # Regrouper l'axe des abscisses en 10 catégories
+    if d[x_var].nunique() > 10:
+        d[x_var] = pd.cut(d[x_var], bins=10)
+
+    sns.countplot(
+        data=d,
+        x=x_var,
+        hue="dissimulation_covid",
+        palette="crest",
+        ax=ax
+    )
+
+    ax.set_title(titre)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel("Nombre de personnes")
+    ax.tick_params(axis="x", rotation=45)
+    ax.legend(title="Dissimulation du Covid")
+
+
 def violinplot_covid(df, var_y, titre, ylabel):
     d = df.dropna(subset=["dissimulation_covid", var_y])
 
