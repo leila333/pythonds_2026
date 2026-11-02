@@ -4,7 +4,7 @@ import os
 
 
 ############# But de ce script #############
-# 1) récupèrer les données avec l'API 
+# 1) récupèrer les données avec l'API ou le fichier parquet
 # 2) Fonctions utiles sur les dataframes
 # 3) Préparer ces données avant leur utilisation
 
@@ -59,7 +59,6 @@ def select_colonne(df: pd.DataFrame, liste_colonnes: list[str]) -> pd.DataFrame:
     return df[liste_colonnes].copy()
 
 
-
 def suppr_colonne(df: pd.DataFrame, liste_colonnes: list[str]) -> pd.DataFrame:
     return df.drop(columns=liste_colonnes)
 
@@ -78,7 +77,8 @@ def renommer_colonne(df: pd.DataFrame, liste_ancien_nom: list[str], liste_nouvea
 ########################## 3) Préparations des données ##########################
 # On utilise la documentation sur les variables : https://ess.sikt.no/en/datafile/242aaa39-3bbb-40f5-98bf-bfb1ce53d8ef
 
-# 2. Valeurs manquantes
+
+############# Choix des variables et renommage
 
 #Liste des colonnes potentiellement pertinentes pour l'étude sur les théories du complot (ESS Round 10)
 colonnes_a_garder = [
@@ -156,7 +156,7 @@ nouveaux_noms = [
 ]
 
 
-# 3. Creation de variables aggrégées
+############## Creation de variables aggrégées
 
 # Variables contribuant à la futur nouvelle variable "score_complot"
 complot_cols = ["complot_groupes_secrets", "complot_science_politique", "dissimulation_covid"]

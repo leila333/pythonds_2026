@@ -34,9 +34,7 @@ def quantile_pondere(x, w, q):
     return np.interp(q, cum, x_s)
 
 
-
-
-# Dictionnaire utilisée dans la fonction stats_continues()
+# Dictionnaire utilisée dans la fonction creer_df_stats_continues()
 libelles = {
     "confiance_institutions": "Confiance dans les institutions (0-10)",
     "score_socioeco": "Score socio-économique (0-1)",

@@ -11,7 +11,9 @@ Ce projet s'inscrit dans le cadre du cours "Python pour la data-science" au prem
 
 ### Organisation du projet
 
-Ce projet se compose de scripts python dans le dossier "scripts" contenant des fonctions et des variables utilisées dans le rapport final qui se lit s'execute de manière linéaire.
+Ce projet se compose de : 
+* scripts python dans le dossier "scripts" contenant des fonctions et des variables utilisées dans le rapport final qui se lit s'execute de manière linéaire.
+* le jeu de données au format parquet
 
 Avant de lancer le rapport final, on pensera à installer les dépendances décrites ci-dessous et à **écrire dans le terminal "cd pythonds_2026"**.
 
