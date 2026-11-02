@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import os
 import matplotlib.pyplot as plt
 from IPython.display import display
@@ -9,6 +10,7 @@ from IPython.display import display
 # explorer les données et visualiser afin de savoir lesquels mettre dans le rapport final
 
 # 1) Fonctions utiles
+# 2) Fonction de visualisation
 # 2) Brouillon (ne pas regarder)
 
 
@@ -28,8 +30,8 @@ def ecart_type_pondere(x, w):
 
 
 def quantile_pondere(x, w, q):
-    idx = np.argsort(x)
-    x_s, w_s = x[idx], w[idx]
+    idx = np.argsort(x.values)
+    x_s, w_s = x.values[idx], w.values[idx]
     cum = (np.cumsum(w_s) - 0.5 * w_s) / w_s.sum()
     return np.interp(q, cum, x_s)
 
@@ -84,7 +86,63 @@ def display_stats_desc(df, titre):
 
 
 
-########################## 2) BROUILLON ################################################
+########################## 2) Fonctions de visualisation
+
+
+def piechart_pondere(df, titre, var, nom_var, poids, labels, couleurs):
+    sub = df[[var, poids]].dropna(subset=[poids])
+
+    manquantes = sub[var].isna()
+    poids_total = sub[poids].sum()
+
+    parts = [
+        100 * sub.loc[~manquantes & (sub[var] == 1), poids].sum() / poids_total,
+        100 * sub.loc[~manquantes & (sub[var] == 0), poids].sum() / poids_total,
+        100 * sub.loc[manquantes, poids].sum() / poids_total
+    ]
+
+    plt.figure(figsize=(3.5, 3.5))
+
+    plt.pie(
+        parts,
+        labels=labels,
+        colors=couleurs,
+        autopct="%1.1f%%",
+        startangle=90
+    )
+
+    plt.title(titre)
+    plt.show()
+
+
+def violinplot_covid(df, var_y, titre, ylabel):
+    d = df.dropna(subset=["dissimulation_covid", var_y])
+
+    plt.figure(figsize=(6, 4))
+
+    sns.violinplot(
+        data=d,
+        x="dissimulation_covid",
+        y=var_y,
+        hue="dissimulation_covid",
+        palette="Blues",
+        inner="quart",
+        legend=False
+    )
+
+    plt.title(titre)
+    plt.xlabel("Dissimulation du Covid")
+    plt.ylabel(ylabel)
+
+    plt.tight_layout()
+    plt.show()
+
+
+
+
+
+
+########################## 3) BROUILLON ################################################
 
 
 
